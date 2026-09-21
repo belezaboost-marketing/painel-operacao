@@ -177,10 +177,21 @@
       body: JSON.stringify({ email: email, create_user: false })
     }).then(function(r){
       btn.disabled = false;
-      showGate('Link enviado para ' + email + ' — confira seu e-mail (pode levar 1-2 min).', 'ok');
+      if (r.ok) {
+        showGate('Link enviado para ' + email + ' — confira seu e-mail (pode levar 1-2 min).', 'ok');
+        return;
+      }
+      return r.json().then(function(body){
+        var code = body && body.error_code;
+        if (code === 'over_email_send_rate_limit') {
+          showGate('Muitos pedidos de link em pouco tempo — o serviço de e-mail pausou por alguns minutos. Espere um pouco e tente de novo.', 'err');
+        } else {
+          showGate('Não consegui enviar o link agora (' + (body && body.msg ? body.msg : 'erro desconhecido') + ').', 'err');
+        }
+      });
     }).catch(function(){
       btn.disabled = false;
-      showGate('Não consegui enviar o link agora. Tente de novo em instantes.', 'err');
+      showGate('Não consegui enviar o link agora — falha de conexão. Tente de novo em instantes.', 'err');
     });
   }
 

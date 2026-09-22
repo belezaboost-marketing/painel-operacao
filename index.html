@@ -358,11 +358,13 @@
     showGate('Você saiu. Digite seu e-mail para entrar de novo.', '');
   });
 
-  // TEMPORARIO (22/09) - pulando o login so pra teste de abertura da pagina
-  document.getElementById('gate').classList.add('hide');
-  document.getElementById('app').style.display = '';
-  document.getElementById('signout').style.display = 'none';
-  document.getElementById('horaservidor').textContent = 'modo teste sem login - dados reais nao vao aparecer';
+  if (tentarSessaoDaURL()){
+    iniciar();
+  } else {
+    var sessaoExistente = getSession();
+    if (sessaoExistente) iniciar();
+    else showGate('', '');
+  }
 })();
 </script>
 

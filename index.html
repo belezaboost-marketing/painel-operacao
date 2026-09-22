@@ -171,10 +171,11 @@
   function pedirLink(email){
     var btn = document.getElementById('gateBtn');
     btn.disabled = true;
-    fetch(AUTH_BASE + '/otp', {
+    var PAGE_URL = 'https://belezaboost-marketing.github.io/painel-operacao/';
+    fetch(AUTH_BASE + '/otp?redirect_to=' + encodeURIComponent(PAGE_URL), {
       method: 'POST',
       headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, create_user: false })
+      body: JSON.stringify({ email: email, create_user: false, options: { email_redirect_to: PAGE_URL } })
     }).then(function(r){
       btn.disabled = false;
       if (r.ok) {
